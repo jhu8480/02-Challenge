@@ -54,16 +54,14 @@ $(function () {
 
   //
   // TODO: Add code to display the current date in the header of the page.
-
-  console.log(dayjs());
-  const monthsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Otc', 'Nov', 'Dec'];
-  const weekDaysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  const setHeader = () => {
+  const setHeaderTime = () => {
     const dateObj = dayjs();
-    $('#currentDay').text(`${weekDaysArr[dateObj.$W]}, ${monthsArr[dateObj.$M]} ${dateObj.$y}  ${dateObj.$H.toString().padStart(2, '0')}:${dateObj.$m.toString().padStart(2, '0')}:${dateObj.$s.toString().padStart(2, '0')}`) ;
+    const hour = dateObj.$H % 12 || 12;
+    const hourPaddedStart = hour.toString().padStart(2, '0');
+    const amOrPm = dateObj.$H > 12 ? 'PM' : 'AM';
+    const stOrthOrRd = dateObj.$D == 1 || dateObj.$D == 21 ? 'st' : dateObj.$D == 3 || dateObj.$D == 23 ? 'rd': 'th';
+    $('#currentDay').text(`${dateObj.format('dddd')}, ${dateObj.format('MMMM')} ${dateObj.format('DD')}${stOrthOrRd} --- ${hourPaddedStart}:${dateObj.$m.toString().padStart(2, '0')}:${dateObj.$s.toString().padStart(2, '0')} ${amOrPm}`) ;
   }
-  
-  setHeader();
-  setInterval(setHeader, 1000);
+  setHeaderTime();
+  setInterval(setHeaderTime, 1000);
 });
