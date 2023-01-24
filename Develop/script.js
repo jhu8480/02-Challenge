@@ -8,7 +8,10 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
-    
+    $('.time-block').on('click', '.btn', (e) => {
+      e.preventDefault();
+      console.log('Listener working');
+    })
 
   //
   // TODO: Add code to apply the past, present, or future class to each time
@@ -40,14 +43,25 @@ $(function () {
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
+  
+  function getLocalStorage() {
+    return localStorage.getItem('dayschedule') === null ? [] : JSON.parse(localStorage.getItem('dayschedule'));
+  }
+
+  function setlocalStorage() {
+
+  }
+
   //
   // TODO: Add code to display the current date in the header of the page.
-  
-  console.log(dayjs().$d);
+
+  console.log(dayjs());
+  const monthsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Otc', 'Nov', 'Dec'];
+  const weekDaysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const setHeader = () => {
-    const dateString = dayjs();
-    $('#currentDay').text(`${dateString.$D}`);
+    const dateObj = dayjs();
+    $('#currentDay').text(`${weekDaysArr[dateObj.$W]}, ${monthsArr[dateObj.$M]} ${dateObj.$y}  ${dateObj.$H.toString().padStart(2, '0')}:${dateObj.$m.toString().padStart(2, '0')}:${dateObj.$s.toString().padStart(2, '0')}`) ;
   }
   
   setHeader();
