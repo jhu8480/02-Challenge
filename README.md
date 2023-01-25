@@ -15,4 +15,4 @@ This web app is a simple work day scheduling tool. The main features are listed 
 
 ## link to deployed page
 
-link:
+link: https://jhu8480.github.io/Work-Day-Schedular-Web-App/
