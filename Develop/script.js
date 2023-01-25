@@ -10,6 +10,9 @@ $(function () {
   // useful when saving the description in local storage?
   const timeblocks = $('.time-block');
   const currentDay = dayjs().format('MMM D, YYYY');
+
+  renderStorage(currentDay);
+  
   timeblocks.on('click', '.btn', function(e) {
     e.preventDefault();
     console.log(currentDay);
@@ -17,7 +20,7 @@ $(function () {
     const targetTextArea = $(this).parent().children('.description');
     const targetText = targetTextArea.val();
     const localStorageArr = getLocalStorage(currentDay);
-
+    
     const dataObj = {id: targetDivId, text: targetText};
     const ifIdExist = localStorageArr.find((el) => el.id === dataObj.id);
     if(!ifIdExist) {
@@ -27,9 +30,28 @@ $(function () {
       localStorageArr.find((el) => el.id === dataObj.id).text = targetText;
       setLocalStorage(currentDay, localStorageArr);
     }
+
+    renderStorage(currentDay);
   })
   
-  
+  function renderStorage(currentDay) {
+    const localStorageArr = getLocalStorage(currentDay);
+    const textArea = timeblocks.children('textarea');
+
+    textArea.each(function(i) {
+      const parentId = $(this).parent().attr('id');
+      console.log(parentId);
+      console.log(localStorageArr);
+      const targetObj = localStorageArr.find(function(el) {
+        return el.id === parentId;
+      }); 
+      console.log(targetObj);
+      if(targetObj) {
+        $(this).val(targetObj.text)
+      }
+    })
+  }
+
 
 
   //
