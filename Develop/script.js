@@ -1,13 +1,6 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
+
 $(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
+  // The storage is based on days, the key to the storage is the currentDay string; When it moves to the next day, the app will save data to a new key based on changed currentDay value, so users will be able to use it the next without having to manually clean up the textarea; And the data will still be available in the local storage
   const timeblocks = $('.time-block');
   const currentDay = dayjs().format('MMM D, YYYY');
 
@@ -53,13 +46,8 @@ $(function () {
   }
 
 
-
   //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
+  // Here I use regular expression to get the numbers from time block's id string and compare it to current hour. Based on the comparison result, the past, present and future class are added to the timeblock elements. A setInterval function is set to automatically update the class when current hour changes;
 
   const setTimeBlockClass = () => {
     const regex = /[0-9]/g;
@@ -81,9 +69,7 @@ $(function () {
   
 
   //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
+  // Here are the functions to get local storage and set local storage; the currentDay variable will be passed in to be set as the key
   
   function getLocalStorage(currentDay) {
     return localStorage.getItem(currentDay) === null ? [] : JSON.parse(localStorage.getItem(currentDay));
@@ -94,7 +80,7 @@ $(function () {
   }
 
   //
-  // TODO: Add code to display the current date in the header of the page.
+  // Set the currentDay p element's inner text. It is updated every second
   const setHeaderTime = () => {
     const dateObj = dayjs();
     const hour = dateObj.$H % 12 || 12;
