@@ -8,10 +8,29 @@ $(function () {
   // function? How can DOM traversal be used to get the "hour-x" id of the
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
-    $('.time-block').on('click', '.btn', (e) => {
-      e.preventDefault();
-      console.log('Listener working');
-    })
+  const timeblocks = $('.time-block');
+  const currentDay = dayjs().format('MMM D, YYYY');
+  timeblocks.on('click', '.btn', function(e) {
+    e.preventDefault();
+    console.log(currentDay);
+    const targetDivId = $(this).parent().attr('id');
+    const targetTextArea = $(this).parent().children('.description');
+    const targetText = targetTextArea.val();
+    const localStorageArr = getLocalStorage(currentDay);
+
+    const dataObj = {id: targetDivId, text: targetText};
+    const ifIdExist = localStorageArr.find((el) => el.id === dataObj.id);
+    if(!ifIdExist) {
+      localStorageArr.push(dataObj);
+      setLocalStorage(currentDay, localStorageArr);
+    } else {
+      localStorageArr.find((el) => el.id === dataObj.id).text = targetText;
+      setLocalStorage(currentDay, localStorageArr);
+    }
+  })
+  
+  
+
 
   //
   // TODO: Add code to apply the past, present, or future class to each time
@@ -44,12 +63,12 @@ $(function () {
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
   
-  function getLocalStorage() {
-    return localStorage.getItem('dayschedule') === null ? [] : JSON.parse(localStorage.getItem('dayschedule'));
+  function getLocalStorage(currentDay) {
+    return localStorage.getItem(currentDay) === null ? [] : JSON.parse(localStorage.getItem(currentDay));
   }
-
-  function setlocalStorage() {
-
+  
+  function setLocalStorage(currentDay, localStorageArr) {
+    localStorage.setItem(currentDay, JSON.stringify(localStorageArr));
   }
 
   //
@@ -59,7 +78,7 @@ $(function () {
     const hour = dateObj.$H % 12 || 12;
     const hourPaddedStart = hour.toString().padStart(2, '0');
     const amOrPm = dateObj.$H > 12 ? 'PM' : 'AM';
-    const stOrthOrRd = dateObj.$D == 1 || dateObj.$D == 21 ? 'st' : dateObj.$D == 3 || dateObj.$D == 23 ? 'rd': 'th';
+    const stOrthOrRd = dateObj.$D == 1 || dateObj.$D == 21 || dateObj.$D == 31 ? 'st' : dateObj.$D == 3 || dateObj.$D == 23 ? 'rd': 'th';
     $('#currentDay').text(`${dateObj.format('dddd')}, ${dateObj.format('MMMM')} ${dateObj.format('DD')}${stOrthOrRd} --- ${hourPaddedStart}:${dateObj.$m.toString().padStart(2, '0')}:${dateObj.$s.toString().padStart(2, '0')} ${amOrPm}`) ;
   }
   setHeaderTime();
